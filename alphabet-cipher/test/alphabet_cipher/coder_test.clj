@@ -24,3 +24,7 @@
            (decipher "hcqxqqtqljmlzhwiivgbsapaiwcenmyu" "packmyboxwithfivedozenliquorjugs")))
     (is (= "abcabcx"
            (decipher "hfnlphoontutufa" "hellofromrussia")))))
+
+(deftest test-keyword-repeated
+  (testing "keyword repeated should return a string of same length as message"
+    (is (= (count (keyword-repeated "abc" "1234567890")) 10 (count "1234567890")))))
