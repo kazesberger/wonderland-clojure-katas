@@ -12,8 +12,8 @@
 (def alphabet (take 26 (map char (iterate inc 97))))
 
 (def substitution-chart
-  ((apply comp (repeat (rand-int 26) rotate-coll)
-    (take 26 (iterate rotate-coll alphabet)))))
+  ;((apply comp (repeat (rand-int 26) rotate-coll))
+   (vec (take 26 (iterate rotate-coll (vec alphabet)))))
 
 
 (defn index-of-char [c]
@@ -27,11 +27,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn encode [keyword message]
-  #_(map #(get-in substitution-chart (map index-of-char %)))
-    (partition 2
-      (interleave
-        (keyword-repeated keyword message)
-        message)))
+  (apply str
+    (map #(get-in substitution-chart (map index-of-char %))
+      (partition 2
+        (interleave
+          (keyword-repeated keyword message)
+          message)))))
 
 
 (defn decode [keyword message]
@@ -39,8 +40,6 @@
 
 (defn decipher [cipher message]
   "decypherme")
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
