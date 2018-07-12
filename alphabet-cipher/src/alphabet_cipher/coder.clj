@@ -63,15 +63,17 @@
                          (repeat)
                          (flatten)))
 
-(defn decode [kw encrypted-msg]
+(defn decode [kw cipher]
   (let [x-seq (infinite-kw kw)
-        z-seq (encrypted-msg)]
-    (apply str (mapv get-x encrypted-msg x-seq))))
+        z-seq (cipher)]
+    (apply str (mapv get-x cipher x-seq))))
 
 (defn decipher [cipher message]
-  "decypherme")
+  (let [x-seq message
+        z-seq cipher]
+    (map get-x cipher message)))
 
-
+(decipher "opkyfipmfmwcvqoklyhxywgeecpvhelzg" "thequickbrownfoxjumpsoveralazydog")
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
