@@ -65,15 +65,42 @@
 
 (defn decode [kw cipher]
   (let [x-seq (infinite-kw kw)
-        z-seq (cipher)]
+        z-seq cipher]
     (apply str (mapv get-x cipher x-seq))))
 
-(defn decipher [cipher message]
+(defn get-x-coll [cipher message]
   (let [x-seq message
         z-seq cipher]
     (map get-x cipher message)))
 
-(decipher "opkyfipmfmwcvqoklyhxywgeecpvhelzg" "thequickbrownfoxjumpsoveralazydog")
+(defn repeating-phrase? [kw-seq n]
+  (= (seq kw-seq)
+     (take (count kw-seq)
+           (->> kw-seq
+             (partition n)
+             (first)
+             (infinite-kw)))))
+
+(defn decipher [cipher message]
+  (let [x-coll (get-x-coll cipher message)]
+    (apply str (take
+                 (apply min
+                   (filter (partial repeating-phrase? x-coll)
+                         (map inc (range (count message)))))
+                 x-coll))))
+
+(comment
+  (decipher "opkyfipmfmwcvqoklyhxywgeecpvhelzg" "thequickbrownfoxjumpsoveralazydog")
+  (apply min (filter (partial repeating-phrase? "vigilancev") (map inc (range (count message)))))
+  (repeating-phrase? "vigilancev" 2)
+
+  (def kw-seq "vigilancev")
+  (take (count kw-seq)
+        (->> kw-seq
+             (partition 2)
+             (first)
+             (infinite-kw))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
