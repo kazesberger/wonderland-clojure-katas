@@ -31,12 +31,22 @@
             y (index-of-char y)]
         (mod  (+ x y) 26)))))
 
+;(defn get-x1 [z y]
+;  (char
+;    (+ 97
+;      (let [znum (index-of-char z)
+;            ynum (index-of-char y)]
+;        (mod (- (+ 26 znum) ynum) 26)))))
+
 (defn get-x [z y]
-  (char
-    (+ 97
-      (let [z (index-of-char z)
-            y (index-of-char y)]
-        (mod (- (+ 26 z) y) 26)))))
+  (char (+ 97
+          (let [znum (index-of-char z)
+                ynum (index-of-char y)]
+            (-> znum
+              (+ 26)
+              (- ynum)
+              (mod 26))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -48,13 +58,15 @@
           (keyword-repeated kw msg)
           msg)))))
 
-(defn infinite-kw [kw] (-> kw
+(defn infinite-kw [kw] (->> kw
                          (sequence)
                          (repeat)
                          (flatten)))
 
-(defn decode [kw msg]
-  (apply str (mapv get-x (infinite-kw kw) msg)))
+(defn decode [kw encrypted-msg]
+  (let [x-seq (infinite-kw kw)
+        z-seq (encrypted-msg)]
+    (apply str (mapv get-x encrypted-msg x-seq))))
 
 (defn decipher [cipher message]
   "decypherme")
@@ -63,6 +75,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
+  (def kw "foo")
+  (def msg "irbaboon")
   (defn rotate-string [s]
     (str (apply str (rest s))
          (first s))))
